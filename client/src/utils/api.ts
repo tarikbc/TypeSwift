@@ -1,7 +1,15 @@
 import { io, Socket } from 'socket.io-client';
 
-// Use the current hostname to allow connections from other computers on the network
-const SOCKET_SERVER_URL = `http://${window.location.hostname}:3001`;
+// Determine the server URL based on the environment
+const isProduction = import.meta.env.PROD;
+
+// In production, the client and server are served from the same domain
+// In development, connect to the local server on port 3001
+const SOCKET_SERVER_URL = isProduction 
+  ? window.location.origin
+  : `http://${window.location.hostname}:3001`;
+
+console.log('Using server URL:', SOCKET_SERVER_URL);
 
 // Singleton pattern for socket connection
 let socket: Socket | null = null;

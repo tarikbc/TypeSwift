@@ -24,11 +24,24 @@ const server = http.createServer(app);
 const cookieSecret = process.env.COOKIE_SECRET || 'typeswift_default_secret';
 const PgSession = connectPgSimple(session);
 
+// Get allowed origins based on environment
+const getAllowedOrigins = () => {
+  if (process.env.NODE_ENV === 'production') {
+    // In production, allow the app's own domain and any specified CORS_ORIGIN
+    if (process.env.CORS_ORIGIN) {
+      return process.env.CORS_ORIGIN;
+    }
+    // If no CORS_ORIGIN is specified, allow all origins in production
+    return true;
+  } else {
+    // In development, allow local development servers
+    return ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5174'];
+  }
+};
+
 // Setup Express middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? 'https://yourdomain.com' // Change to your production domain
-    : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5174'],
+  origin: getAllowedOrigins(),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires']
@@ -36,9 +49,7 @@ app.use(cors({
 
 // Add OPTIONS handler for preflight requests
 app.options('*', cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? 'https://yourdomain.com'
-    : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5174'],
+  origin: getAllowedOrigins(),
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires']
@@ -53,9 +64,7 @@ let sessionMiddleware: express.RequestHandler;
 // Setup Socket.io with CORS
 const io = new SocketIOServer(server, {
   cors: {
-    origin: process.env.NODE_ENV === 'production'
-      ? 'https://yourdomain.com' // Change to your production domain
-      : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5174'],
+    origin: getAllowedOrigins(),
     methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'Expires']
@@ -369,12 +378,31 @@ async function startNewRound(): Promise<void> {
       }
     });
     
-    // Apply the session middleware
-    app.use(sessionMiddleware);
+// Apply the session middleware
+app.use(sessionMiddleware);
 
-    // Get first word
-    currentWord = await wordService.getRandomWord();
-    console.log('Initial word:', currentWord);
+// In production, serve static files from the client build directory
+if (process.env.NODE_ENV === 'production') {
+  // Serve static files from the client build directory
+  const clientBuildPath = path.resolve(__dirname, '../../client/dist');
+  app.use(express.static(clientBuildPath));
+  
+  // For any other routes, serve the index.html file
+  app.get('*', (req, res) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'API endpoint not found' });
+    }
+    
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+  
+  console.log('Serving static files from:', clientBuildPath);
+}
+
+// Get first word
+currentWord = await wordService.getRandomWord();
+console.log('Initial word:', currentWord);
 
     // Start the server
     const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001;
