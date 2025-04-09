@@ -381,7 +381,7 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
               ref={inputRef}
               type="text"
               value={inputValue}
-              onChange={(value, e) => handleInputChange(e)}
+              onChange={(_value, e) => handleInputChange(e)}
               placeholder={isFireworksActive ? "Fireworks! Wait..." : waitingForOthers ? "Waiting for others to finish..." : "Type here..."}
               className={styles.typingInput}
               disabled={isFireworksActive || waitingForOthers}
