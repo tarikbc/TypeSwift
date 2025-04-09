@@ -29,11 +29,6 @@ interface GameContainerProps {
   initialGameState: GameState | null;
 }
 
-interface TypingProgressData {
-  progress: number;
-  wpm?: number;
-}
-
 interface PlayerProgressData {
   playerId: string;
   progress: number;
