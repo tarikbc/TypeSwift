@@ -16,9 +16,10 @@ interface WordDisplayProps {
   countdown: number | null;
   players?: Player[];
   currentPlayerId?: string;
+  fireworksTarget?: string | null;
 }
 
-function WordDisplay({ word, userInput, countdown, players = [], currentPlayerId }: WordDisplayProps) {
+function WordDisplay({ word, userInput, countdown, players = [], currentPlayerId, fireworksTarget }: WordDisplayProps) {
   // Show countdown if active
   if (countdown !== null) {
     return (
@@ -65,7 +66,7 @@ function WordDisplay({ word, userInput, countdown, players = [], currentPlayerId
               {playersAtPosition.map(player => (
                 <div 
                   key={player.id} 
-                  className={styles.playerPositionMarker}
+                  className={`${styles.playerPositionMarker} ${fireworksTarget === player.id ? styles.fireworks : ''}`}
                   title={player.name}
                 >
                   {player.emoji || "👤"}
@@ -101,7 +102,7 @@ function WordDisplay({ word, userInput, countdown, players = [], currentPlayerId
               {playersAtPosition.map(player => (
                 <div 
                   key={player.id} 
-                  className={styles.playerPositionMarker}
+                  className={`${styles.playerPositionMarker} ${fireworksTarget === player.id ? styles.fireworks : ''}`}
                   title={player.name}
                 >
                   {player.emoji || "👤"}

@@ -4,6 +4,7 @@ import WordDisplay from "./WordDisplay";
 import PlayerProgress from "./PlayerProgress";
 import Leaderboard from "./Leaderboard";
 import UserSettings from "./UserSettings";
+import FireworksOverlay from "./FireworksOverlay";
 import { playSuccessSound, playErrorSound } from "../utils/soundEffects";
 import styles from './GameContainer.module.css';
 
@@ -15,6 +16,8 @@ interface Player {
   emoji?: string;
   progress: number;
   wpm: number;
+  bestWpm?: number;
+  latestWpm?: number;
   position?: number;
 }
 
@@ -41,9 +44,16 @@ interface PlayerUpdatedData {
   emoji: string;
 }
 
+interface FireworksData {
+  targetPlayerId: string;
+  sourcePlayerId: string;
+}
+
 interface PlayerWpmData {
   playerId: string;
   wpm: number;
+  bestWpm?: number;
+  latestWpm?: number;
 }
 
 interface NewWordData {
@@ -57,6 +67,8 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [fireworksTarget, setFireworksTarget] = useState<string | null>(null);
+  const [fireworksSource, setFireworksSource] = useState<string | null>(null);
   
   // Initialize from props if available
   useEffect(() => {
@@ -134,17 +146,22 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
       );
       
       // Update current player if it's the same player
-      if (currentPlayer && currentPlayer.id === data.playerId) {
-        setCurrentPlayer(prev => 
-          prev ? { ...prev, name: data.name, emoji: data.emoji } : prev
-        );
-      }
+      setCurrentPlayer(prev => 
+        prev && prev.id === data.playerId
+          ? { ...prev, name: data.name, emoji: data.emoji }
+          : prev
+      );
     }
 
     function handlePlayerWpm(data: PlayerWpmData) {
       setPlayers((prevPlayers) =>
         prevPlayers.map((player) =>
-          player.id === data.playerId ? { ...player, wpm: data.wpm } : player
+          player.id === data.playerId ? { 
+            ...player, 
+            wpm: data.wpm,
+            bestWpm: data.bestWpm !== undefined ? data.bestWpm : player.bestWpm,
+            latestWpm: data.latestWpm !== undefined ? data.latestWpm : player.latestWpm
+          } : player
         )
       );
     }
@@ -195,6 +212,18 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
       }, timeUntilReveal);
     }
 
+    function handleFireworks(data: FireworksData) {
+      // Set the fireworks target and source
+      setFireworksTarget(data.targetPlayerId);
+      setFireworksSource(data.sourcePlayerId);
+      
+      // Clear the fireworks after a delay
+      setTimeout(() => {
+        setFireworksTarget(null);
+        setFireworksSource(null);
+      }, 3000);
+    }
+
     socket.on("gameState", handleGameState);
     socket.on("playerJoined", handlePlayerJoined);
     socket.on("playerLeft", handlePlayerLeft);
@@ -202,6 +231,7 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
     socket.on("playerWpm", handlePlayerWpm);
     socket.on("newWord", handleNewWord);
     socket.on("playerUpdated", handlePlayerUpdated);
+    socket.on("fireworks", handleFireworks);
 
     return () => {
       socket.off("gameState", handleGameState);
@@ -211,6 +241,7 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
       socket.off("playerWpm", handlePlayerWpm);
       socket.off("newWord", handleNewWord);
       socket.off("playerUpdated", handlePlayerUpdated);
+      socket.off("fireworks", handleFireworks);
     };
   }, [socket]);
 
@@ -281,6 +312,9 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
     }
   };
 
+  // Check if fireworks are active for the current player
+  const isFireworksActive = currentPlayer?.id === fireworksTarget;
+
   return (
     <div className={styles.gameContainer}>
       <div className={styles.headerActions}>
@@ -302,6 +336,7 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
             countdown={countdown}
             players={players}
             currentPlayerId={currentPlayer?.id}
+            fireworksTarget={fireworksTarget}
           />
         </div>
 
@@ -312,15 +347,20 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
               type="text"
               value={inputValue}
               onChange={handleInputChange}
-              placeholder="Type the word here..."
+              placeholder={isFireworksActive ? "Fireworks! Wait..." : "Type the word here..."}
               className={styles.typingInput}
+              disabled={isFireworksActive}
               autoFocus
             />
           </div>
         </div>
 
         <div className={styles.componentContainer}>
-          <PlayerProgress players={players} currentPlayerId={currentPlayer?.id} />
+          <PlayerProgress 
+            players={players} 
+            currentPlayerId={currentPlayer?.id} 
+            socket={socket}
+          />
         </div>
       </div>
 
@@ -338,6 +378,18 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
           onClose={() => setShowSettings(false)}
         />
       )}
+
+      {/* Show fireworks overlay when current player is the target */}
+      <FireworksOverlay 
+        isActive={currentPlayer?.id === fireworksTarget}
+        duration={3000}
+        onComplete={() => {
+          setFireworksTarget(null);
+          setFireworksSource(null);
+        }}
+        players={players}
+        fireworksSource={fireworksSource}
+      />
     </div>
   );
 }

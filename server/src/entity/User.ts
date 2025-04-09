@@ -18,6 +18,9 @@ export class User {
   bestWpm: number;
 
   @Column({ default: 0 })
+  latestWpm: number;
+
+  @Column({ default: 0 })
   gamesPlayed: number;
 
   @Column({ default: 0 })

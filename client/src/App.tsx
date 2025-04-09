@@ -12,6 +12,8 @@ interface Player {
   emoji?: string;
   progress: number;
   wpm: number;
+  bestWpm?: number;
+  latestWpm?: number;
   position?: number;
 }
 

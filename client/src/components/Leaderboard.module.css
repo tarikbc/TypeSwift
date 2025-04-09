@@ -49,11 +49,34 @@
   flex: 1;
 }
 
-.wpm {
-  min-width: 80px;
+.scoreInfo {
+  min-width: 120px;
   text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.wpm {
   font-weight: 500;
   color: var(--primary-color);
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+}
+
+.statsRow {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: 0.1rem;
+}
+
+.statLabel {
+  margin-right: 0.3rem;
+}
+
+.statValue {
+  font-weight: 500;
 }
 
 .emptyLeaderboard {
@@ -65,6 +88,10 @@
 @media (max-width: 768px) {
   .playerInfo {
     width: 130px;
+  }
+  
+  .scoreInfo {
+    min-width: 100px;
   }
 }
 
@@ -84,5 +111,17 @@
 
   .playerEmoji {
     font-size: 1rem;
+  }
+  
+  .scoreInfo {
+    min-width: 90px;
+  }
+  
+  .wpm {
+    font-size: 0.9rem;
+  }
+  
+  .statsRow {
+    font-size: 0.65rem;
   }
 }

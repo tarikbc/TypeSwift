@@ -7,6 +7,8 @@ interface Player {
   emoji?: string;
   progress: number;
   wpm: number;
+  bestWpm?: number;
+  latestWpm?: number;
 }
 
 interface LeaderboardProps {
@@ -38,8 +40,18 @@ function Leaderboard({ players, currentPlayerId }: LeaderboardProps) {
                 <span className={styles.playerEmoji}>{player.emoji || "👤"}</span>
                 <span className={styles.playerName}>{player.name}</span>
               </div>
-              <div className={styles.wpm}>
-                {player.wpm > 0 ? `${player.wpm} WPM` : "-"}
+              <div className={styles.scoreInfo}>
+                <div className={styles.wpm}>
+                  {player.wpm > 0 ? `${player.wpm} WPM` : "-"}
+                </div>
+                <div className={styles.statsRow}>
+                  <span className={styles.statLabel}>Best:</span>
+                  <span className={styles.statValue}>{player.bestWpm || 0} WPM</span>
+                </div>
+                <div className={styles.statsRow}>
+                  <span className={styles.statLabel}>Latest:</span>
+                  <span className={styles.statValue}>{player.latestWpm || 0} WPM</span>
+                </div>
               </div>
             </div>
           ))}

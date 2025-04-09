@@ -62,6 +62,54 @@
   height: 20px;
 }
 
+.fireworks {
+  position: relative;
+  animation: fireworks 2s ease-out;
+}
+
+@keyframes fireworks {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7), 
+                0 0 0 0 rgba(255, 0, 0, 0.7), 
+                0 0 0 0 rgba(0, 255, 0, 0.7), 
+                0 0 0 0 rgba(0, 0, 255, 0.7);
+  }
+  25% {
+    transform: scale(1.2);
+    opacity: 0.8;
+    box-shadow: 0 0 10px 5px rgba(255, 215, 0, 0.7), 
+                0 0 8px 4px rgba(255, 0, 0, 0.7), 
+                0 0 12px 6px rgba(0, 255, 0, 0.7), 
+                0 0 14px 7px rgba(0, 0, 255, 0.7);
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.6;
+    box-shadow: 0 0 20px 10px rgba(255, 215, 0, 0.5), 
+                0 0 16px 8px rgba(255, 0, 0, 0.5), 
+                0 0 24px 12px rgba(0, 255, 0, 0.5), 
+                0 0 28px 14px rgba(0, 0, 255, 0.5);
+  }
+  75% {
+    transform: scale(1.2);
+    opacity: 0.4;
+    box-shadow: 0 0 30px 15px rgba(255, 215, 0, 0.3), 
+                0 0 24px 12px rgba(255, 0, 0, 0.3), 
+                0 0 36px 18px rgba(0, 255, 0, 0.3), 
+                0 0 42px 21px rgba(0, 0, 255, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+    box-shadow: 0 0 40px 20px rgba(255, 215, 0, 0), 
+                0 0 32px 16px rgba(255, 0, 0, 0), 
+                0 0 48px 24px rgba(0, 255, 0, 0), 
+                0 0 56px 28px rgba(0, 0, 255, 0);
+  }
+}
+
 .countdown {
   font-size: 5rem;
   font-weight: bold;

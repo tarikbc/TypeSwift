@@ -54,6 +54,10 @@ export const UserRepository = AppDataSource.getRepository(User).extend({
       user.wordsCompleted += 1;
     }
     
+    // Always update latest WPM
+    user.latestWpm = wpm;
+    
+    // Update best WPM if current WPM is higher
     if (wpm > user.bestWpm) {
       user.bestWpm = wpm;
     }

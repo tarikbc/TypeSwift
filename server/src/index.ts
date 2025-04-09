@@ -85,6 +85,8 @@ interface Player {
   emoji: string;
   progress: number;
   wpm: number;
+  bestWpm?: number;  // Best WPM score from database
+  latestWpm?: number; // Latest WPM score from database
   position?: number; // Track current character position
 }
 
@@ -224,6 +226,8 @@ io.on('connection', async (socket) => {
       emoji: playerEmoji,
       progress: 0,
       wpm: 0,
+      bestWpm: user ? user.bestWpm : 0,
+      latestWpm: user ? user.latestWpm : 0,
       position: 0
     });
 
@@ -270,6 +274,25 @@ io.on('connection', async (socket) => {
     }
   });
 
+  // Handle fireworks trigger
+  socket.on('triggerFireworks', (data: { targetPlayerId: string }) => {
+    try {
+      const { targetPlayerId } = data;
+      const sourcePlayerId = socket.id;
+      
+      // Check if the target player exists
+      if (connectedPlayers.has(targetPlayerId)) {
+        // Broadcast the fireworks event to all players with source player info
+        io.emit('fireworks', { 
+          targetPlayerId,
+          sourcePlayerId
+        });
+      }
+    } catch (error) {
+      console.error('Error handling fireworks trigger:', error);
+    }
+  });
+
   // Handle player input
   socket.on('typingProgress', async (data: { progress: number; position?: number; wpm?: number }) => {
     try {
@@ -294,9 +317,18 @@ io.on('connection', async (socket) => {
         // If player completed the word, update WPM
         if (data.progress === 100 && data.wpm) {
           player.wpm = data.wpm;
+          player.latestWpm = data.wpm;
+          
+          // Update best WPM if current WPM is higher
+          if (!player.bestWpm || data.wpm > player.bestWpm) {
+            player.bestWpm = data.wpm;
+          }
+          
           io.emit('playerWpm', {
             playerId,
-            wpm: data.wpm
+            wpm: data.wpm,
+            bestWpm: player.bestWpm,
+            latestWpm: player.latestWpm
           });
           
           // Update user stats in database
