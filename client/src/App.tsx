@@ -154,6 +154,7 @@ function App() {
 
       <footer className={styles.appFooter}>
         <p>TypeSwift &copy; {new Date().getFullYear()}</p>
+        <a href="https://github.com/tarikbc/TypeSwift">GitHub</a>
       </footer>
     </div>
   );

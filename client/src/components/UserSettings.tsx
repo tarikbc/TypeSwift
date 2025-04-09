@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "./UserSettings.module.css";
+import InputField from "./InputField";
 
 // Common emoji categories that could be used for avatars
 const AVAILABLE_EMOJIS = [
@@ -42,12 +43,11 @@ function UserSettings({ socket, playerName, playerEmoji, onClose }: UserSettings
         
         <form onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label htmlFor="player-name">Your Name</label>
-            <input
+            <InputField
               id="player-name"
-              type="text"
+              label="Your Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(value) => setName(value)}
               placeholder="Enter your name"
               maxLength={15}
               required

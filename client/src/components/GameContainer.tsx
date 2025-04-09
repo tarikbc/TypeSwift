@@ -6,6 +6,7 @@ import Leaderboard from "./Leaderboard";
 import UserSettings from "./UserSettings";
 import FireworksOverlay from "./FireworksOverlay";
 import WaitingIndicator from "./WaitingIndicator";
+import InputField from "./InputField";
 import { playSuccessSound, playErrorSound } from "../utils/soundEffects";
 import styles from './GameContainer.module.css';
 
@@ -376,12 +377,12 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
 
         <div className={styles.componentContainer}>
           <div className={styles.inputContainer}>
-            <input
+            <InputField
               ref={inputRef}
               type="text"
               value={inputValue}
-              onChange={handleInputChange}
-              placeholder={isFireworksActive ? "Fireworks! Wait..." : waitingForOthers ? "Waiting for others to finish..." : "Type the word here..."}
+              onChange={(value, e) => handleInputChange(e)}
+              placeholder={isFireworksActive ? "Fireworks! Wait..." : waitingForOthers ? "Waiting for others to finish..." : "Type here..."}
               className={styles.typingInput}
               disabled={isFireworksActive || waitingForOthers}
               autoFocus

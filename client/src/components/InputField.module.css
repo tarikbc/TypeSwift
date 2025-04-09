@@ -1,0 +1,98 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-color);
+  font-size: 0.9rem;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--input-background);
+  color: var(--text-color);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  max-width: 100%; /* Prevent horizontal overflow */
+}
+
+.input:hover:not(:disabled) {
+  border-color: var(--primary-color);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(254, 180, 123, 0.2);
+}
+
+.focused {
+  border-color: var(--primary-color);
+}
+
+.error {
+  border-color: var(--incorrect-color);
+}
+
+.error:focus {
+  box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2);
+}
+
+.helperTextContainer {
+  min-height: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.helperText {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.errorText {
+  color: var(--incorrect-color);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Ensure proper styling for different input types */
+.input[type="date"],
+.input[type="time"],
+.input[type="number"] {
+  appearance: none;
+}
+
+.input[type="number"]::-webkit-inner-spin-button,
+.input[type="number"]::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .input {
+    padding: 0.6rem;
+    font-size: 0.95rem;
+  }
+}
