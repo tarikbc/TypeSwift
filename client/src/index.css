@@ -7,6 +7,20 @@
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
 
+  /* Base theme variables */
+  --primary-color: #feb47b;
+  --secondary-color: #ff7e5f;
+  --background-color: #121212;
+  --card-background: rgba(255, 255, 255, 0.05);
+  --text-color: #ffffff;
+  --text-secondary: #aaaaaa;
+  --correct-color: #4caf50;
+  --incorrect-color: #f44336;
+  --border-color: #333333;
+  --input-background: rgba(255, 255, 255, 0.05);
+  --shadow-color: rgba(0, 0, 0, 0.2);
+  --highlight-background: rgba(254, 180, 123, 0.1);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -56,11 +70,28 @@ button:focus-visible {
   :root {
     color: #213547;
     background-color: #ffffff;
+    
+    /* Light theme variables */
+    --primary-color: #ff7e5f;
+    --secondary-color: #feb47b;
+    --background-color: #ffffff;
+    --card-background: rgba(0, 0, 0, 0.03);
+    --text-color: #213547;
+    --text-secondary: #666666;
+    --correct-color: #2e7d32;
+    --incorrect-color: #c62828;
+    --border-color: #e0e0e0;
+    --input-background: rgba(0, 0, 0, 0.02);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --highlight-background: rgba(255, 126, 95, 0.1);
   }
+  
   a:hover {
     color: #747bff;
   }
+  
   button {
     background-color: #f9f9f9;
+    color: #213547;
   }
 }

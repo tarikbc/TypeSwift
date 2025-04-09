@@ -51,7 +51,7 @@ export const UserRepository = AppDataSource.getRepository(User).extend({
     
     // Update stats
     if (completedWord) {
-      user.wordsCompleted += 1;
+      user.challengesCompleted += 1;
     }
     
     // Always update latest WPM

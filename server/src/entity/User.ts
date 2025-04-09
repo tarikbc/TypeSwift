@@ -24,7 +24,7 @@ export class User {
   gamesPlayed: number;
 
   @Column({ default: 0 })
-  wordsCompleted: number;
+  challengesCompleted: number;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -5,6 +5,7 @@ import PlayerProgress from "./PlayerProgress";
 import Leaderboard from "./Leaderboard";
 import UserSettings from "./UserSettings";
 import FireworksOverlay from "./FireworksOverlay";
+import WaitingIndicator from "./WaitingIndicator";
 import { playSuccessSound, playErrorSound } from "../utils/soundEffects";
 import styles from './GameContainer.module.css';
 
@@ -19,6 +20,7 @@ interface Player {
   bestWpm?: number;
   latestWpm?: number;
   position?: number;
+  hasFinished?: boolean;
 }
 
 interface GameState {
@@ -69,6 +71,7 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [fireworksTarget, setFireworksTarget] = useState<string | null>(null);
   const [fireworksSource, setFireworksSource] = useState<string | null>(null);
+  const [waitingForOthers, setWaitingForOthers] = useState<boolean>(false);
   
   // Initialize from props if available
   useEffect(() => {
@@ -174,6 +177,7 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
       setTypingStartTime(null);
       setGameActive(false);
       setWordRevealed(false);
+      setWaitingForOthers(false);
 
       // Calculate the countdown based on the reveal time from server
       const now = Date.now();
@@ -304,6 +308,22 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
 
           // Mark game as inactive but don't disable the input field
           setGameActive(false);
+          
+          // Mark current player as finished
+          setPlayers(prevPlayers =>
+            prevPlayers.map(player =>
+              player.id === currentPlayer?.id
+                ? { ...player, hasFinished: true, progress: 100 }
+                : player
+            )
+          );
+          
+          // Check if we need to wait for others
+          const otherPlayersStillTyping = players.some(
+            player => player.id !== currentPlayer?.id && player.progress < 100
+          );
+          
+          setWaitingForOthers(otherPlayersStillTyping);
         }
       }
     } else {
@@ -314,6 +334,20 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
 
   // Check if fireworks are active for the current player
   const isFireworksActive = currentPlayer?.id === fireworksTarget;
+  
+  // Effect to update waiting state when other players finish
+  useEffect(() => {
+    if (!currentPlayer || !waitingForOthers) return;
+    
+    // Check if all other players have finished
+    const allOthersFinished = players.every(player => 
+      player.id === currentPlayer.id || player.progress === 100
+    );
+    
+    if (allOthersFinished) {
+      setWaitingForOthers(false);
+    }
+  }, [players, currentPlayer, waitingForOthers]);
 
   return (
     <div className={styles.gameContainer}>
@@ -347,12 +381,15 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
               type="text"
               value={inputValue}
               onChange={handleInputChange}
-              placeholder={isFireworksActive ? "Fireworks! Wait..." : "Type the word here..."}
+              placeholder={isFireworksActive ? "Fireworks! Wait..." : waitingForOthers ? "Waiting for others to finish..." : "Type the word here..."}
               className={styles.typingInput}
-              disabled={isFireworksActive}
+              disabled={isFireworksActive || waitingForOthers}
               autoFocus
             />
           </div>
+          {waitingForOthers && currentPlayer && (
+            <WaitingIndicator isWaiting={waitingForOthers} />
+          )}
         </div>
 
         <div className={styles.componentContainer}>

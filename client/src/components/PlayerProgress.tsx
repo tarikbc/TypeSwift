@@ -8,6 +8,7 @@ interface Player {
   emoji?: string;
   progress: number;
   wpm: number;
+  hasFinished?: boolean;
 }
 
 interface PlayerProgressProps {
@@ -36,14 +37,17 @@ function PlayerProgress({ players, currentPlayerId, socket }: PlayerProgressProp
             key={player.id}
             className={`${styles.playerRow} ${
               player.id === currentPlayerId ? styles.currentPlayer : ""
-            }`}
+            } ${player.hasFinished ? styles.finishedPlayer : ""}`}
             onClick={() => handlePlayerClick(player.id)}
             disabled={player.id === currentPlayerId}
             title={player.id === currentPlayerId ? "This is you" : `Click to send fireworks to ${player.name}`}
           >
             <div className={styles.playerInfo}>
               <span className={styles.playerEmoji}>{player.emoji || "👤"}</span>
-              <span className={styles.playerName}>{player.name}</span>
+              <span className={styles.playerName}>
+                {player.name}
+                {player.hasFinished && <span className={styles.waitingBadge}>Waiting</span>}
+              </span>
             </div>
 
             <div className={styles.progressBarContainer}>
