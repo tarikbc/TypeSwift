@@ -21,6 +21,8 @@ const FireworksOverlay: React.FC<FireworksOverlayProps> = ({
   const sourcePlayer = players.find(p => p.id === fireworksSource);
   const containerRef = useRef<HTMLDivElement>(null);
   const fireworksInstanceRef = useRef<Fireworks | null>(null);
+  // Reference to the input field that needs focus
+  const inputFieldRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (isActive && containerRef.current) {
@@ -83,6 +85,10 @@ const FireworksOverlay: React.FC<FireworksOverlayProps> = ({
       // Set a timeout to stop the fireworks after the specified duration
       const timer = setTimeout(() => {
         fireworks.stop();
+        // Focus back on the input field when fireworks finish
+        if (inputFieldRef.current) {
+          inputFieldRef.current.focus();
+        }
         if (onComplete) {
           onComplete();
         }

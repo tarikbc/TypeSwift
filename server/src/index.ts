@@ -186,9 +186,12 @@ io.use(async (socket, next) => {
   }
 });
 
-// Track connected players
-const connectedPlayers = new Map<string, Player>();
+// Track connected players and their last activity time
+const connectedPlayers = new Map<string, Player & { lastActivity: number }>();
 let currentWord = '';
+
+// Idle timeout in milliseconds (1 minute)
+const IDLE_TIMEOUT = 60 * 1000;
 
 // Socket.io connection handler
 io.on('connection', async (socket) => {
@@ -228,7 +231,8 @@ io.on('connection', async (socket) => {
       wpm: 0,
       bestWpm: user ? user.bestWpm : 0,
       latestWpm: user ? user.latestWpm : 0,
-      position: 0
+      position: 0,
+      lastActivity: Date.now() // Track last activity time
     });
 
     // Send current game state to the new player
@@ -244,8 +248,17 @@ io.on('connection', async (socket) => {
     console.error('Error handling connection:', error);
   }
 
+  // Update player's last activity time
+  const updateActivity = () => {
+    const player = connectedPlayers.get(socket.id);
+    if (player) {
+      player.lastActivity = Date.now();
+    }
+  };
+
   // Handle profile updates
   socket.on('updateProfile', async (data: { name: string; emoji: string }) => {
+    updateActivity();
     try {
       const playerId = socket.id;
       const player = connectedPlayers.get(playerId);
@@ -276,6 +289,7 @@ io.on('connection', async (socket) => {
 
   // Handle fireworks trigger
   socket.on('triggerFireworks', (data: { targetPlayerId: string }) => {
+    updateActivity();
     try {
       const { targetPlayerId } = data;
       const sourcePlayerId = socket.id;
@@ -295,6 +309,7 @@ io.on('connection', async (socket) => {
 
   // Handle player input
   socket.on('typingProgress', async (data: { progress: number; position?: number; wpm?: number }) => {
+    updateActivity();
     try {
       const playerId = socket.id;
       const player = connectedPlayers.get(playerId);
@@ -354,6 +369,11 @@ io.on('connection', async (socket) => {
     }
   });
 
+  // Handle heartbeat to keep connection alive
+  socket.on('heartbeat', () => {
+    updateActivity();
+  });
+
   // Handle disconnect
   socket.on('disconnect', () => {
     connectedPlayers.delete(socket.id);
@@ -380,6 +400,34 @@ async function startNewRound(): Promise<void> {
     revealTime: revealTime
   });
 }
+
+// Check for idle users every 10 seconds
+setInterval(() => {
+  const now = Date.now();
+  
+  // Find idle players
+  for (const [socketId, player] of connectedPlayers.entries()) {
+    if (now - player.lastActivity > IDLE_TIMEOUT) {
+      // Get the socket by ID
+      const socket = io.sockets.sockets.get(socketId);
+      if (socket) {
+        // Emit idle timeout event to the client
+        socket.emit('idleTimeout');
+        
+        // Disconnect the socket
+        socket.disconnect(true);
+        
+        // Remove from connected players
+        connectedPlayers.delete(socketId);
+        
+        // Notify other players
+        io.emit('playerLeft', socketId);
+        
+        console.log(`Player ${player.name} (${socketId}) disconnected due to inactivity`);
+      }
+    }
+  }
+}, 10000);
 
 // Initialize application
 (async () => {

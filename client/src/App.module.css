@@ -39,6 +39,45 @@
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
+.disconnectedMessage {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  background-color: rgba(255, 152, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.disconnectedMessage h2 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.reconnectButton {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.reconnectButton:hover {
+  background-color: var(--primary-color-dark);
+  transform: translateY(-2px);
+}
+
+.reconnectButton:active {
+  transform: translateY(0);
+}
+
 .loading {
   text-align: center;
   font-size: 1.2rem;

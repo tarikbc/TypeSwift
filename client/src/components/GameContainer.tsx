@@ -423,6 +423,10 @@ function GameContainer({ socket, initialGameState }: GameContainerProps) {
         onComplete={() => {
           setFireworksTarget(null);
           setFireworksSource(null);
+          // Ensure input is focused after fireworks
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
         }}
         players={players}
         fireworksSource={fireworksSource}
