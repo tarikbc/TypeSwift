@@ -1,0 +1,88 @@
+.leaderboard {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.leaderboard h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.leaderboardList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.leaderboardItem {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.currentPlayer {
+  background-color: rgba(254, 180, 123, 0.1);
+  border-left: 3px solid var(--primary-color);
+}
+
+.rank {
+  width: 40px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.playerInfo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.playerEmoji {
+  font-size: 1.2rem;
+}
+
+.playerName {
+  flex: 1;
+}
+
+.wpm {
+  min-width: 80px;
+  text-align: right;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.emptyLeaderboard {
+  text-align: center;
+  padding: 1rem;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .playerInfo {
+    width: 130px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rank {
+    width: 30px;
+    font-size: 1rem;
+  }
+  
+  .playerInfo {
+    width: 100px;
+  }
+  
+  .playerName {
+    font-size: 0.8rem;
+  }
+
+  .playerEmoji {
+    font-size: 1rem;
+  }
+}

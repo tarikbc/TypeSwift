@@ -1,0 +1,28 @@
+{
+  "name": "typeswift",
+  "version": "1.0.0",
+  "description": "A real-time multiplayer typing competition game using WebSockets with PostgreSQL.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd server && npm run start",
+    "client": "cd client && npm run dev",
+    "server": "cd server && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "concurrently \"cd server && npm run build\" \"cd client && npm run build\"",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "setup": "npm run install:all"
+  },
+  "keywords": [
+    "typing",
+    "game",
+    "websockets",
+    "multiplayer",
+    "postgresql"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

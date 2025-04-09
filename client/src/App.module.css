@@ -1,0 +1,77 @@
+:root {
+  --primary-color: #feb47b;
+  --secondary-color: #ff7e5f;
+  --background-color: #121212;
+  --text-color: #ffffff;
+  --correct-color: #4caf50;
+  --incorrect-color: #f44336;
+  --border-color: #333333;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.appHeader {
+  padding: 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.appHeader h1 {
+  color: var(--primary-color);
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.main {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.errorMessage {
+  color: var(--incorrect-color);
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  background-color: rgba(244, 67, 54, 0.1);
+  border-radius: 8px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.appFooter {
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .appHeader h1 {
+    font-size: 2.5rem;
+  }
+  
+  .main {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .appHeader h1 {
+    font-size: 2rem;
+  }
+  
+  .main {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,101 @@
+.playerProgress {
+  width: 100%;
+}
+
+.playerProgress h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.progressList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.playerRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.currentPlayer {
+  background-color: rgba(254, 180, 123, 0.1);
+  border-left: 3px solid var(--primary-color);
+}
+
+.playerInfo {
+  width: 150px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.playerEmoji {
+  font-size: 1.2rem;
+}
+
+.playerName {
+  flex: 1;
+}
+
+.progressBarContainer {
+  flex: 1;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    var(--secondary-color),
+    var(--primary-color)
+  );
+  border-radius: 12px;
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--text-color);
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.noPlayers {
+  text-align: center;
+  padding: 1rem;
+  color: #888;
+}
+
+@media (max-width: 768px) {
+  .playerInfo {
+    width: 130px;
+  }
+}
+
+@media (max-width: 480px) {
+  .playerInfo {
+    width: 100px;
+  }
+  
+  .playerName {
+    font-size: 0.8rem;
+  }
+
+  .playerEmoji {
+    font-size: 1rem;
+  }
+}

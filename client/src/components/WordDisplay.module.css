@@ -1,0 +1,101 @@
+.wordDisplay {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 0 auto 1rem;
+  min-height: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.word {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  justify-content: center;
+  line-height: 1.6;
+  margin: 0 auto;
+  width: auto;
+}
+
+.wordGroup {
+  display: flex;
+  white-space: nowrap;
+  margin: 0 0.2rem;
+}
+
+.character {
+  position: relative;
+  white-space: nowrap;
+}
+
+
+.correct {
+  color: var(--correct-color);
+}
+
+.incorrect {
+  color: var(--incorrect-color);
+  text-decoration: line-through;
+}
+
+.playerMarkers {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+}
+
+.playerPositionMarker {
+  font-size: 0.8rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+}
+
+.countdown {
+  font-size: 5rem;
+  font-weight: bold;
+  color: #ff5e5b;
+  animation: pulse 1s infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .wordDisplay {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wordDisplay {
+    font-size: 1.5rem;
+  }
+}
